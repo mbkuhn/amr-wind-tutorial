@@ -1,5 +1,7 @@
 # 01_compiling.md
-[Official documentation on compiling](https://exawind.github.io/amr-wind/user/build.html)
+[Outdated documentation on compiling](https://exawind.github.io/amr-wind/user/build.html)
+[Spack-Manager example for ExaWind Codes](https://sandialabs.github.io/spack-manager/user_profiles/developers/snapshot_workflow.html)
+[Spack-Manager abbreviated example](https://sandialabs.github.io/spack-manager/user_profiles/developers/developer_workflow.html#quick-start)
 
 Before you run AMR-Wind, you must first compile the LES solver. You may also need to compile additional codes in tandem (e.g., OpenFAST if you want to model turbines). There are two general approaches to compiling AMR-Wind: building from source or using [Spack-Manager](https://github.com/psakievich/spack-manager) ([docs](https://sandialabs.github.io/spack-manager/index.html)). I recommend Spack-Manager, because it can get very complicated to manually compile with all the interdependencies.
 
@@ -35,7 +37,7 @@ Also, before we compile, let's load the version of `gcc` that we will be using. 
 module load gcc/11.2.0
 ```
 
-With this done, let's now create our environment. Environments, which are a grouping of specifications for a particular installation of the code, can be made to "belong" to a directory, using the `-d` option, or belong to a name, using the `-n` option. Environments created with a name will have their files copied into `$SPACK_MANAGER/environments`.
+With this done, let's now create our environment. Environments, which are a grouping of specifications for a particular installation of the code, can be made to "belong" to a directory, using the `-d` option, or belong to a name, using the `-n` option. Environments created with a name will have their files copied into `$SPACK_MANAGER/environments`. In my experience, environments belonging to a directory are easier to modify and access.
 ```
 mkdir ${SPACKMANDIR}/spack-july2023
 cd ${SPACKMANDIR}/spack-july2023
@@ -51,7 +53,7 @@ With the source code present and in the state you desire, let Spack compile ever
 ```
 spack install
 ```
-This process will take some time, and it will generate a large wall of text. Once that command is done running, we can confirm the completion of the process by locating the amr-wind executable. Within the amr-wind directory, there will be a folder named `spack-build-<hash>`, where the <hash> is a signature of letters and numbers assigned to this repository and this environment. Within this build directory will be the executable `amr_wind`. 
+This process will take some time, and it will generate a large wall of text. Once that command is done running, we can also confirm the completion of the process by locating the amr-wind executable. Within the amr-wind directory, there will be a folder named `spack-build-<hash>`, where the <hash> is a signature of letters and numbers assigned to this repository and this environment. Within this build directory will be the executable `amr_wind`. 
 
 
 ### Additional details for turbine simulations
