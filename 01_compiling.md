@@ -1,6 +1,8 @@
 # 01_compiling.md
 [Outdated documentation on compiling](https://exawind.github.io/amr-wind/user/build.html)
+
 [Spack-Manager example for ExaWind Codes](https://sandialabs.github.io/spack-manager/user_profiles/developers/snapshot_workflow.html)
+
 [Spack-Manager abbreviated example](https://sandialabs.github.io/spack-manager/user_profiles/developers/developer_workflow.html#quick-start)
 
 Before you run AMR-Wind, you must first compile the LES solver. You may also need to compile additional codes in tandem (e.g., OpenFAST if you want to model turbines). There are two general approaches to compiling AMR-Wind: building from source or using [Spack-Manager](https://github.com/psakievich/spack-manager) ([docs](https://sandialabs.github.io/spack-manager/index.html)). I recommend Spack-Manager, because it can get very complicated to manually compile with all the interdependencies.
