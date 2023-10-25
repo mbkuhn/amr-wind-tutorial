@@ -7,7 +7,7 @@ In my mind, [Spack](https://github.com/spack/spack) and Spack-Manager give us so
 
 If you're trying to quickly set up AMR-Wind, the [Snapshot Developer Workflow Example](https://sandialabs.github.io/spack-manager/user_profiles/developers/snapshot_workflow.html) is a quick way to cover the basics. I'll present a streamlined process here, but if things break, check out the official docs.
 
-First, download Spack-Manager. I recommend setting it up somewhere where you have lots of storage (e.g., on Eagle, a `/projects/` directory instead of `/home/`), because it's easy to run out of space quickly. I'll be demoing this install on the DelftBlue supercomputer.
+First, download Spack-Manager. I recommend setting it up somewhere where you have lots of storage (e.g., on Eagle, a `/projects/` directory instead of `/home/`), because it's easy to run out of space quickly. Spack-Manager also makes it much easier to install AMR-Wind on your own machine, if you are interested in running small cases locally. If you use a Mac, the compiler option "apple-clang" is recommended, instead of "gcc" as is used in this walkthrough.
 
 ```
 export SPACKMANDIR=<fill in the directory>
@@ -30,14 +30,12 @@ spack info openfast
 ```
 With these commands, you can see info like the safe versions as well as different flags that can get specified.
 
-Also, before we compile, let's load the version of `gcc` that we will be using
+Also, before we compile, let's load the version of `gcc` that we will be using. As an example, let's suppose that `gcc/11.2.0` is the compiler version available on our machine via a module.
 ```
-module load 2022r2
-module avail
 module load gcc/11.2.0
 ```
 
-With this done, let's now create our environment.
+With this done, let's now create our environment. Environments, which are a grouping of specifications for a particular installation of the code, can be made to "belong" to a directory, using the `-d` option, or belong to a name, using the `-n` option. Environments created with a name will have their files copied into `$SPACK_MANAGER/environments`.
 ```
 mkdir ${SPACKMANDIR}/spack-july2023
 cd ${SPACKMANDIR}/spack-july2023
@@ -45,43 +43,16 @@ quick-create-dev -d ${SPACKMANDIR}/spack-july2023 -s openfast@master%gcc@11.2.0 
 ```
 This `quick-create-dev` command has flags selected so that that AMR-Wind will work with OpenFAST, and AMR-Wind also has the option to save out certain files using HDF5. If you forget the `+openfast` flag, your AMR-Wind simulations of turbines will crash and give you a confusing error message.
 
-After creating the environment, I will do some stuff to ensure I get the exact versions of the codes I would like. I'll note that there are proper ways to get specific code versions (I believe tied to externals), but the following hacky approach has worked for me.
+As part of the creation of the environment, Spack-Manager will automatically clone the repositories listed (amr-wind and openfast). If you already have a clone that you would like to use (or your own fork), you can instead create a soft/symbolic link within the directory prior to the environment creation step, and no new cloning will take place. Just ensure that the link has the exact name of the library as Spack-Manager understands it ("amr-wind" or "openfast").
 
-Looking through [AMR-Wind commits](https://github.com/Exawind/amr-wind/commits/main), I've determined that I want the code at SHA 4b71037218723e0c63d54c140423ef503ac3c912, and looking through [OpenFAST commits](https://github.com/OpenFAST/openfast/commits/main), I want 18704086dad861ab13daf804825da7c4b8d59428. That OpenFAST commit corresponds to the release of version 3.4.1. In theory, we should be able to grab specific versions of OpenFAST via our `quick-create-dev` command, but `spack info openfast` didn't have `3.4.1` listed, so this is a different approach to get our desired version of OpenFAST. (Note: on July 18, 2023, OpenFAST 3.4.1 is the newest version of OpenFAST that is supported by AMR-Wind)
+The repositories cloned by Spack-Manager are shallow clones, and do not automatically have any commit history. If you would like to compile an older version of a code using a different commit, you can retrieve the commit history using the command `git fetch --unshallow` within the repository and then check out any past commit that you may need. After choosing a different commit, be sure to run `git submodule update` to modify the submodules to correspond to the chosen commit.
 
-To download the desired version of AMR-Wind, run
-```
-rm -rf amr-wind
-git clone --recursive git@github.com:Exawind/amr-wind.git
-cd amr-wind
-git checkout 4b71037218723e0c63d54c140423ef503ac3c912
-cd ..
-```
-If the SSH link `git@github.com:Exawind/amr-wind.git` didn't work, try the HTTPS link `https://github.com/Exawind/amr-wind.git`.
-
-Similarly, for OpenFAST, run
-```
-rm -rf openfast
-git clone --recursive git@github.com:OpenFAST/openfast.git
-cd openfast
-git checkout 18704086dad861ab13daf804825da7c4b8d59428
-cd ..
-```
-
-Now that we have our specific versions of everything, let Spack compile everything by running
+With the source code present and in the state you desire, let Spack compile everything by running
 ```
 spack install
 ```
-This process will take some time, and it will generate a large wall of text. Once that command is done running, we can test 
+This process will take some time, and it will generate a large wall of text. Once that command is done running, we can confirm the completion of the process by locating the amr-wind executable. Within the amr-wind directory, there will be a folder named `spack-build-<hash>`, where the <hash> is a signature of letters and numbers assigned to this repository and this environment. Within this build directory will be the executable `amr_wind`. 
 
-
-In `include.yaml`, we modified 
-```
-perl:
-  require: '@5.34.0'
-```
-
-Alternatively, you found where DelftBlue's … `/~/mehtabkhan/.spack_downloads/_source-cache/archive/*.tar.gz` and unziped, and then they moved it to the destination in `/home/mehtabkhan/spack-manager/stage/spack-stage-perl-3.4.1`
 
 ### Additional details for turbine simulations
 If you are simulating an OpenFAST turbine, you will probably need a controller for your turbine. I recommend [ROSCO](https://github.com/NREL/ROSCO). The full installation docs are [here](https://rosco.readthedocs.io/en/latest/source/install.html#full-rosco-installation), but we only need the controller from ROSCO, so the installation process is light. Below, I'll document what I do on Eagle.
