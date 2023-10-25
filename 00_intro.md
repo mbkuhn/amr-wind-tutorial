@@ -1,5 +1,5 @@
 # 00_intro.md
-AMR-Wind is a large-eddy simulation code built for simulations of individual wind turbines as well as wind farms. The official documentation is [here](https://exawind.github.io/amr-wind/) and the official codebase is [here](https://github.com/Exawind/amr-wind). As of June 2023, the code has been used to do big wind simulations with [541 turbines](https://iopscience.iop.org/article/10.1088/1742-6596/2505/1/012023/meta) in a 100 km x 100 km domain, and it has been used for blade-resolved simulations of small clusters of turbines. 
+AMR-Wind is a large-eddy simulation code intended for simulations of individual wind turbines as well as wind farms. The official documentation is [here](https://exawind.github.io/amr-wind/) and the official codebase is [here](https://github.com/Exawind/amr-wind). As of June 2023, the code has been used to do big wind simulations with [541 turbines](https://iopscience.iop.org/article/10.1088/1742-6596/2505/1/012023/meta) in a 100 km x 100 km domain, and it has been used for blade-resolved simulations of small clusters of turbines. 
 
 AMR-Wind was designed to run on both CPUs and GPUs. In practice, I think people mostly run on CPUs today. But, as our supercomputer systems shift to get their compute power from GPUs, I anticipate that AMR-Wind users will shift more heavily to GPUs.
 
