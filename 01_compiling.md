@@ -51,6 +51,8 @@ As part of the creation of the environment, Spack-Manager will automatically clo
 
 The repositories cloned by Spack-Manager are shallow clones, and do not automatically have any commit history. If you would like to compile an older version of a code using a different commit, you can retrieve the commit history using the command `git fetch --unshallow` within the repository and then check out any past commit that you may need. After choosing a different commit, be sure to run `git submodule update` to modify the submodules to correspond to the chosen commit.
 
+Note: the fact we specified "master" and "main" branches when we created the environment does not mean that the code in these repositories must be on the master and main branches, respectively. These references communicate to Spack-Manager a grouping of dependencies for each code. In almost all cases, using different commits or even your own fork for these codes does not change their dependencies, and so the specification of "master" and "main" is the correct spec for whatever version of the code you are using.
+
 With the source code present and in the state you desire, let Spack compile everything by running
 ```
 spack install
